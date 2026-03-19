@@ -21,7 +21,9 @@ struct DashboardView: View {
 
             Spacer()
 
-            Button(action: viewModel.openPrimaryInvoiceFlow) {
+            Button {
+                viewModel.openPrimaryInvoiceFlow()
+            } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)

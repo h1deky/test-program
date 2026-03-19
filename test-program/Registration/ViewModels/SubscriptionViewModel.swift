@@ -3,7 +3,6 @@ import Combine
 
 final class SubscriptionViewModel: ObservableObject {
     @Published var selectedPlanID = "yearly"
-    @Published var presentedSheet: SubscriptionSheet?
 
     let plans: [SubscriptionPlan] = [
         SubscriptionPlan(id: "weekly", name: "Weekly", price: "$4.99", period: "/week", badge: nil),
@@ -24,13 +23,5 @@ final class SubscriptionViewModel: ObservableObject {
 
     func select(_ plan: SubscriptionPlan) {
         selectedPlanID = plan.id
-    }
-
-    func startTrial() {
-        presentedSheet = .trial
-    }
-
-    func restorePurchase() {
-        presentedSheet = .restore
     }
 }

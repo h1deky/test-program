@@ -1,16 +1,12 @@
 import SwiftUI
 
 struct RegistrationView: View {
+    let onComplete: () -> Void
+
     @StateObject private var viewModel = RegistrationViewModel()
 
     var body: some View {
-        Group {
-            if viewModel.isBusinessSetupComplete {
-                RootTabView()
-            } else {
-                setupFormScreen
-            }
-        }
+        setupFormScreen
     }
 
     private var setupFormScreen: some View {
@@ -105,7 +101,9 @@ struct RegistrationView: View {
     }
 
     private var saveButton: some View {
-        Button(action: viewModel.completeSetup) {
+        Button {
+            handleSave()
+        } label: {
             Text("Save & Continue")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(.white)
@@ -125,8 +123,13 @@ struct RegistrationView: View {
             set: { viewModel.form[keyPath: keyPath] = $0 }
         )
     }
+
+    private func handleSave() {
+        viewModel.completeSetup()
+        onComplete()
+    }
 }
 
 #Preview {
-    RegistrationView()
+    RegistrationView(onComplete: {})
 }

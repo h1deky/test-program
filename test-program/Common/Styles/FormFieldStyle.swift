@@ -4,7 +4,7 @@ struct FormFieldStyleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding()
-            .background(Color(.systemGray6))
+            .background(Color.surfaceSecondary)
             .cornerRadius(10)
     }
 }

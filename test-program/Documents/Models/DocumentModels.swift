@@ -1,8 +1,12 @@
 import Foundation
 
-enum DocumentRoute: Hashable {
+enum DocumentRoute: String, Identifiable {
     case newInvoice
     case newEstimate
+
+    var id: String {
+        rawValue
+    }
 }
 
 enum DocumentTab: Int, CaseIterable, Identifiable {

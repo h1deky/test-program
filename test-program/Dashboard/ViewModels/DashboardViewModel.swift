@@ -13,7 +13,7 @@ final class DashboardViewModel: ObservableObject {
 
     let actions: [DashboardActionItem] = [
         DashboardActionItem(id: "newInvoice", icon: "doc.text.fill", title: "New Invoice", destination: .newInvoice),
-        DashboardActionItem(id: "newEstimate", icon: "doc.badge.plus.fill", title: "New Estimate", destination: .estimate)
+        DashboardActionItem(id: "newEstimate", icon: "ecg.text.page.fill", title: "New Estimate", destination: .estimate)
     ]
 
     func open(_ sheet: DashboardSheet) {

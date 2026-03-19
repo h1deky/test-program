@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SubscriptionView: View {
+    let onContinue: () -> Void
+
     @StateObject private var viewModel = SubscriptionViewModel()
 
     var body: some View {
@@ -8,7 +10,6 @@ struct SubscriptionView: View {
             contentSection
         }
         .navigationBarHidden(true)
-        .sheet(item: $viewModel.presentedSheet, content: sheetView)
     }
 
     private var contentSection: some View {
@@ -81,7 +82,9 @@ struct SubscriptionView: View {
 
     private var actionButtons: some View {
         VStack(spacing: 24) {
-            Button(action: viewModel.startTrial) {
+            Button {
+                onContinue()
+            } label: {
                 Text("Start Free Trial")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
@@ -93,7 +96,9 @@ struct SubscriptionView: View {
             .buttonStyle(ScaleButtonStyle())
 
             HStack(spacing: 16) {
-                Button(action: viewModel.restorePurchase) {
+                Button {
+                    onContinue()
+                } label: {
                     Text("Restore Purchase")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.gray)
@@ -129,14 +134,10 @@ struct SubscriptionView: View {
             Spacer()
         }
     }
-
-    private func sheetView(for sheet: SubscriptionSheet) -> some View {
-        ComingSoonView(title: sheet.title, message: sheet.message)
-    }
 }
 
 #Preview {
     NavigationView {
-        SubscriptionView()
+        SubscriptionView(onContinue: {})
     }
 }

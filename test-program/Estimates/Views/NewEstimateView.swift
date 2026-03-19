@@ -6,13 +6,38 @@ struct NewEstimateView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                formSection
-            }
+            contentSection
             .navigationTitle("New Estimate")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: toolbarContent)
             .sheet(item: $viewModel.presentedSheet, content: sheetView)
+        }
+    }
+
+    private var contentSection: some View {
+        VStack(spacing: 0) {
+            DocumentComposerTabBar(selection: $viewModel.selectedTab)
+            activeTabContent
+        }
+    }
+
+    @ViewBuilder
+    private var activeTabContent: some View {
+        switch viewModel.selectedTab {
+        case .draft:
+            ScrollView {
+                formSection
+            }
+        case .preview:
+            ScrollView {
+                previewSection
+                    .padding()
+            }
+        case .send:
+            ScrollView {
+                sendSection
+                    .padding()
+            }
         }
     }
 
@@ -82,13 +107,15 @@ struct NewEstimateView: View {
             Text("Items")
                 .font(.headline)
             Spacer()
-            Button(action: viewModel.openCatalog) {
+            Button {
+                viewModel.openCatalog()
+            } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "cube.box")
                     Text("Catalog")
                 }
                 .font(.subheadline)
-                .foregroundColor(.primary)
+                .foregroundColor(.black)
             }
         }
     }
@@ -119,7 +146,7 @@ struct NewEstimateView: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color.surfaceSecondary)
         .cornerRadius(12)
     }
 
@@ -154,7 +181,9 @@ struct NewEstimateView: View {
     }
 
     private var addItemButton: some View {
-        Button(action: viewModel.openAddItem) {
+        Button {
+            viewModel.openAddItem()
+        } label: {
             HStack {
                 Image(systemName: "plus")
                 Text("Add Item")
@@ -163,14 +192,16 @@ struct NewEstimateView: View {
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color(.systemGray4), lineWidth: 1)
+                    .stroke(Color.borderLight, lineWidth: 1)
             )
         }
-        .foregroundColor(.primary)
+        .foregroundColor(.black)
     }
 
     private var taxDiscountSection: some View {
-        Button(action: viewModel.openTaxDiscount) {
+        Button {
+            viewModel.openTaxDiscount()
+        } label: {
             HStack {
                 Image(systemName: "percent")
                 Text("Tax & Discount")
@@ -181,10 +212,10 @@ struct NewEstimateView: View {
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color(.systemGray4), lineWidth: 1)
+                    .stroke(Color.borderLight, lineWidth: 1)
             )
         }
-        .foregroundColor(.primary)
+        .foregroundColor(.black)
     }
 
     private var notesSection: some View {
@@ -211,16 +242,96 @@ struct NewEstimateView: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(Color.surfaceSecondary)
         .cornerRadius(12)
+    }
+
+    private var previewSection: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            previewHeader(title: "Estimate Preview", number: viewModel.estimateNumber)
+            previewCard(title: "Client", value: viewModel.clientName, fallback: "No client selected")
+            previewCard(title: "Issue Date", value: viewModel.issueDate, fallback: "Not set")
+            previewCard(title: "Due Date", value: viewModel.dueDate, fallback: "Not set")
+            previewCard(title: "Item", value: viewModel.itemName, fallback: "No items added")
+            previewCard(title: "Notes", value: viewModel.notes, fallback: "No notes yet")
+        }
+    }
+
+    private var sendSection: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            previewHeader(title: "Send Estimate", number: viewModel.estimateNumber)
+
+            Text("Choose how you want to send this document.")
+                .font(.system(size: 15, weight: .regular))
+                .foregroundColor(.gray)
+
+            actionTile(title: "Send by Email", subtitle: "Prepare estimate for email delivery")
+            actionTile(title: "Export PDF", subtitle: "Generate a PDF version for sharing")
+        }
+    }
+
+    private func previewHeader(title: String, number: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.system(size: 28, weight: .bold))
+                .foregroundColor(.black)
+
+            Text(number.isEmpty ? "No document number" : number)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(.gray)
+        }
+    }
+
+    private func previewCard(title: String, value: String, fallback: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.gray)
+
+            Text(value.isEmpty ? fallback : value)
+                .font(.system(size: 16, weight: .medium))
+                .foregroundColor(.black)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color.surfaceSecondary)
+        .cornerRadius(14)
+    }
+
+    private func actionTile(title: String, subtitle: String) -> some View {
+        Button {
+            // Sending actions are not implemented yet.
+        } label: {
+            HStack {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(title)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.black)
+
+                    Text(subtitle)
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.gray)
+                }
+
+                Spacer()
+
+                Image(systemName: "arrow.right")
+                    .foregroundColor(.black)
+            }
+            .padding(16)
+            .background(Color.surfaceSecondary)
+            .cornerRadius(14)
+        }
     }
 
     @ToolbarContentBuilder
     private func toolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
-            Button(action: dismiss.callAsFunction) {
+            Button {
+                dismiss()
+            } label: {
                 Image(systemName: "arrow.left")
-                    .foregroundColor(.primary)
+                    .foregroundColor(.black)
             }
         }
     }

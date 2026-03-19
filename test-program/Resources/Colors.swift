@@ -24,4 +24,8 @@ extension Color {
     static let circleGray = fromHex("#EEEEEE")
     static let yellowLogo = fromHex("#FFEA00")
     static let orangeLogo = fromHex("#FF9500")
+    static let whiteBackground = fromHex("#FFFFFF")
+    static let surfaceSecondary = fromHex("#F5F5F7")
+    static let surfaceTertiary = fromHex("#EEF0F3")
+    static let borderLight = fromHex("#E3E5E8")
 }

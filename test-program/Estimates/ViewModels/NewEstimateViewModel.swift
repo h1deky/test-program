@@ -34,6 +34,7 @@ enum EstimateSheet: String, Identifiable {
 }
 
 final class NewEstimateViewModel: ObservableObject {
+    @Published var selectedTab: DocumentComposerTab = .draft
     @Published var estimateNumber = "EST-1001"
     @Published var issueDate = ""
     @Published var dueDate = ""

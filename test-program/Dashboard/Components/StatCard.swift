@@ -23,8 +23,7 @@ struct StatCard: View {
         .frame(maxWidth: .infinity, minHeight: 95)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .stroke(Color(.systemGray5), lineWidth: 1)
+                .stroke(Color.borderLight, lineWidth: 1)
         )
     }
 }
-

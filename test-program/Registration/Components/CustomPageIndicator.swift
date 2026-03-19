@@ -5,7 +5,7 @@ struct CustomPageIndicator: View {
     @Binding var currentPage: Int
 
     var activeColor: Color = .black
-    var inactiveColor: Color = Color(UIColor.systemGray5)
+    var inactiveColor: Color = .borderLight
     var activeWidth: CGFloat = 30
     var dotSize: CGFloat = 10
     var spacing: CGFloat = 8

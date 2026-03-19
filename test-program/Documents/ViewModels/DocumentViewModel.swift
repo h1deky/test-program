@@ -4,7 +4,7 @@ import Combine
 final class DocumentViewModel: ObservableObject {
     @Published var selectedTab: DocumentTab = .invoices
     @Published var searchQuery = ""
-    @Published var path: [DocumentRoute] = []
+    @Published var presentedSheet: DocumentRoute?
 
     var segmentedItems: [String] {
         DocumentTab.allCases.map(\.title)
@@ -37,12 +37,6 @@ final class DocumentViewModel: ObservableObject {
     }
 
     func openComposer() {
-        let route: DocumentRoute = selectedTab == .invoices ? .newInvoice : .newEstimate
-        push(route)
-    }
-
-    func push(_ route: DocumentRoute) {
-        path.removeAll(keepingCapacity: true)
-        path.append(route)
+        presentedSheet = selectedTab == .invoices ? .newInvoice : .newEstimate
     }
 }

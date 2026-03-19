@@ -45,7 +45,9 @@ struct EmptyDocumentView: View {
                     .multilineTextAlignment(.center)
             }
 
-            Button(action: onCreate) {
+            Button {
+                onCreate()
+            } label: {
                 Text(docButtonText)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.white)
@@ -69,4 +71,3 @@ struct EmptyDocumentView: View {
         docButtonText: "Create First Invoice"
     )
 }
-

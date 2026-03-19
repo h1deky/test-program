@@ -21,7 +21,7 @@ struct CustomSegmentedControl: View {
                 } label: {
                     Text(items[index])
                         .font(.system(size: 16, weight: .medium))
-                        .foregroundColor(selection == index ? .black : .secondary)
+                        .foregroundColor(selection == index ? .black : .gray)
                         .padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
                         .background(
@@ -38,9 +38,8 @@ struct CustomSegmentedControl: View {
             }
         }
         .padding(4)
-        .background(Color(UIColor.systemGray6))
+        .background(Color.surfaceSecondary)
         .cornerRadius(16)
         .padding()
     }
 }
-

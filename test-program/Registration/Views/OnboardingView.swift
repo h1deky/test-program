@@ -17,10 +17,14 @@ struct OnboardingView: View {
     private var skipButtonRow: some View {
         HStack {
             Spacer()
-            Button("Skip", action: onFinish)
-                .foregroundColor(.gray)
-                .padding(.trailing, 24)
-                .padding(.top, 16)
+            Button {
+                onFinish()
+            } label: {
+                Text("Skip")
+            }
+            .foregroundColor(.gray)
+            .padding(.trailing, 24)
+            .padding(.top, 16)
         }
     }
 
@@ -39,13 +43,15 @@ struct OnboardingView: View {
             numberOfPages: viewModel.pages.count,
             currentPage: $viewModel.currentPage,
             activeColor: .black,
-            inactiveColor: Color(UIColor.systemGray5)
+            inactiveColor: .borderLight
         )
         .padding(.vertical, 32)
     }
 
     private var actionButtonSection: some View {
-        Button(action: handlePrimaryAction) {
+        Button {
+            handlePrimaryAction()
+        } label: {
             Text(viewModel.primaryButtonTitle)
                 .font(.headline)
                 .foregroundColor(.white)

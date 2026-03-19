@@ -4,15 +4,13 @@ struct DocumentView: View {
     @StateObject private var viewModel = DocumentViewModel()
 
     var body: some View {
-        NavigationStack(path: $viewModel.path) {
-            VStack(spacing: 0) {
-                headerSection
-                segmentedControlSection
-                searchSection
-                contentSection
-            }
-            .navigationDestination(for: DocumentRoute.self, destination: destinationView)
+        VStack(spacing: 0) {
+            headerSection
+            segmentedControlSection
+            searchSection
+            contentSection
         }
+        .sheet(item: $viewModel.presentedSheet, content: destinationView)
     }
 
     private var headerSection: some View {
@@ -25,7 +23,9 @@ struct DocumentView: View {
 
             Spacer()
 
-            Button(action: viewModel.openComposer) {
+            Button {
+                viewModel.openComposer()
+            } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
@@ -95,7 +95,7 @@ struct DocumentView: View {
                 .foregroundColor(.gray)
                 .padding(12)
         }
-        .background(Color(.systemGray5))
+        .background(Color.surfaceTertiary)
         .cornerRadius(12)
     }
 }

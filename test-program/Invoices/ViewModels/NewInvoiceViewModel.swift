@@ -34,6 +34,7 @@ enum InvoiceSheet: String, Identifiable {
 }
 
 final class NewInvoiceViewModel: ObservableObject {
+    @Published var selectedTab: DocumentComposerTab = .draft
     @Published var invoiceNumber = "INV-1001"
     @Published var issueDate = ""
     @Published var dueDate = ""

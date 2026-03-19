@@ -6,7 +6,9 @@ struct ActionCard: View {
     var onTap: () -> Void = {}
 
     var body: some View {
-        Button(action: onTap) {
+        Button {
+            onTap()
+        } label: {
             VStack(spacing: 12) {
                 Image(systemName: icon)
                     .font(.system(size: 28))
@@ -19,10 +21,9 @@ struct ActionCard: View {
             .frame(maxWidth: .infinity, minHeight: 88)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(.systemGray5), lineWidth: 1)
+                    .stroke(Color.borderLight, lineWidth: 1)
             )
         }
         .buttonStyle(.plain)
     }
 }
-
