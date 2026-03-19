@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct PrivacyPolicyView: View {
-    @Environment(\.dismiss) var dismiss
-
     var body: some View {
         VStack {
             ScrollView {
@@ -44,4 +42,3 @@ struct PrivacyPolicyView: View {
         }
     }
 }
-

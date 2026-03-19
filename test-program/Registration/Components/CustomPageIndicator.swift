@@ -4,7 +4,6 @@ struct CustomPageIndicator: View {
     let numberOfPages: Int
     @Binding var currentPage: Int
 
-    // Настройки внешнего вида
     var activeColor: Color = .black
     var inactiveColor: Color = Color(UIColor.systemGray5)
     var activeWidth: CGFloat = 30
@@ -27,4 +26,3 @@ struct CustomPageIndicator: View {
         }
     }
 }
-

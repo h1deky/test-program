@@ -1,11 +1,15 @@
 import SwiftUI
 
-enum MainTab: String, CaseIterable, Hashable {
+enum MainTab: String, CaseIterable, Hashable, Identifiable {
     case home
     case documents
     case clients
     case settings
-    
+
+    var id: String {
+        rawValue
+    }
+
     var title: String {
         switch self {
         case .home:
@@ -18,7 +22,7 @@ enum MainTab: String, CaseIterable, Hashable {
             return "Settings"
         }
     }
-    
+
     var iconName: String {
         switch self {
         case .home:
@@ -35,13 +39,12 @@ enum MainTab: String, CaseIterable, Hashable {
 
 struct CustomTabBarView: View {
     @Binding var selectedTab: MainTab
-    
+
     var body: some View {
         VStack(spacing: 0) {
             Divider()
-            
             HStack(spacing: 0) {
-                ForEach(MainTab.allCases, id: \.self) { tab in
+                ForEach(MainTab.allCases) { tab in
                     tabBarItem(tab)
                 }
             }
@@ -60,7 +63,7 @@ struct CustomTabBarView: View {
             VStack(spacing: 4) {
                 Image(systemName: tab.iconName)
                     .font(.system(size: 22, weight: .regular))
-                
+
                 Text(tab.title)
                     .font(.system(size: 11, weight: .regular))
             }
@@ -71,24 +74,19 @@ struct CustomTabBarView: View {
 }
 
 struct RootTabView: View {
-    @State private var selectedTab: MainTab = .home
-    
+    @StateObject private var viewModel = RootTabViewModel()
+
     var body: some View {
-        ZStack {
-            VStack(spacing: 0) {
-                // Tab Content
-                tabContent
-                    .ignoresSafeArea(edges: .bottom)
-                
-                // Custom Tab Bar
-                CustomTabBarView(selectedTab: $selectedTab)
-            }
+        VStack(spacing: 0) {
+            tabContent
+                .ignoresSafeArea(edges: .bottom)
+            CustomTabBarView(selectedTab: $viewModel.selectedTab)
         }
     }
-    
+
     @ViewBuilder
     private var tabContent: some View {
-        switch selectedTab {
+        switch viewModel.selectedTab {
         case .home:
             DashboardView()
         case .documents:
@@ -100,7 +98,6 @@ struct RootTabView: View {
         }
     }
 }
-
 
 struct ClientsView: View {
     var body: some View {
