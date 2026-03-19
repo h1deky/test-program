@@ -30,6 +30,9 @@ extension Color {
 
     static let blackMain: Color = fromHex("#0A0A0A")
     static let circleGray: Color = fromHex("#eeeeee")
+    static let yellowLogo: Color = fromHex("#FFEA00")
+    static let orangeLogo: Color = fromHex("#FF9500")
+
     
 }
 

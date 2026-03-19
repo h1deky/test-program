@@ -12,6 +12,19 @@ struct SubscriptionPlan {
 struct SubscriptionView: View {
     @State private var selectedPlan: String = "yearly"
     @Environment(\.dismiss) var dismiss
+    @State private var presentedSheet: PresentedSheet?
+
+    private enum PresentedSheet: Identifiable {
+        case trial
+        case restore
+
+        var id: String {
+            switch self {
+            case .trial: "trial"
+            case .restore: "restore"
+            }
+        }
+    }
     
     private let plans: [SubscriptionPlan] = [
         .init(id: "weekly", name: "Weekly", price: "$4.99", period: "/week", badge: nil, isSelected: false),
@@ -41,16 +54,24 @@ struct SubscriptionView: View {
             }
         }
         .navigationBarHidden(true)
+        .sheet(item: $presentedSheet) { sheet in
+            switch sheet {
+            case .trial:
+                ComingSoonView(title: "Start Free Trial", message: "Пока заглушка: подключение подписки будет позже.")
+            case .restore:
+                ComingSoonView(title: "Restore Purchase", message: "Пока заглушка: восстановление покупок будет позже.")
+            }
+        }
     }
 
     private var headerIcon: some View {
         VStack {
             Image(systemName: "crown.fill")
                 .font(.system(size: 40))
-                .foregroundColor(.orange)
+                .foregroundColor(Color.orangeLogo)
         }
         .frame(width: 80, height: 80)
-        .background(Color(UIColor.systemYellow).opacity(0.2))
+        .background(Color.yellowLogo.opacity(0.2))
         .cornerRadius(40)
         .padding(.top, 8)
     }
@@ -116,7 +137,7 @@ struct SubscriptionView: View {
     private var actionButtons: some View {
         VStack(spacing: 24) {
             Button {
-                // Action
+                presentedSheet = .trial
             } label: {
                 Text("Start Free Trial")
                     .font(.system(size: 16, weight: .semibold))
@@ -130,7 +151,7 @@ struct SubscriptionView: View {
             
             HStack(spacing: 16) {
                 Button {
-                    // Action
+                    presentedSheet = .restore
                 } label: {
                     Text("Restore Purchase")
                         .font(.system(size: 14, weight: .regular))
@@ -246,36 +267,6 @@ struct LinkButtonStyle: ButtonStyle {
         configuration.label
             .opacity(configuration.isPressed ? 0.6 : 1.0)
             .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
-    }
-}
-
-struct SectionTitle: View {
-    let title: String
-    
-    init(_ title: String) {
-        self.title = title
-    }
-    
-    var body: some View {
-        Text(title)
-            .font(.system(size: 16, weight: .semibold))
-            .foregroundColor(.black)
-            .padding(.top, 8)
-    }
-}
-
-struct SectionText: View {
-    let text: String
-    
-    init(_ text: String) {
-        self.text = text
-    }
-    
-    var body: some View {
-        Text(text)
-            .font(.system(size: 14, weight: .regular))
-            .foregroundColor(.gray)
-            .lineSpacing(2)
     }
 }
 

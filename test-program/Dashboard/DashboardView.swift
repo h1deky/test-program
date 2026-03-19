@@ -1,14 +1,20 @@
 import SwiftUI
 
 struct DashboardView: View {
-    private let features = [
-        "Unlimited invoices & estimates",
-        "PDF export & email sharing",
-        "Multiple payment tracking",
-        "Client management",
-        "Custom branding"
-    ]
-    
+    @State private var presentedSheet: PresentedSheet?
+
+    private enum PresentedSheet: Identifiable {
+        case newInvoice
+        case estimate
+
+        var id: String {
+            switch self {
+            case .newInvoice: "newInvoice"
+            case .estimate: "estimate"
+            }
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -24,28 +30,44 @@ struct DashboardView: View {
                     
                     // Recent Documents
                     recentDocumentsSection
+                    
+                    EmptyDocumentView(
+                        docIcon: "doc",
+                        docTitleMain: "No documents yet",
+                        docTitleSecondary: "Create your first invoice to get started",
+                        docButtonText: "Create First Invoice",
+                        onCreate: { presentedSheet = .newInvoice }
+                    )
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 20)
                 .padding(.bottom, 40)
             }
         }
-        .background(Color.white.ignoresSafeArea())
+        .sheet(item: $presentedSheet) { sheet in
+            switch sheet {
+            case .newInvoice:
+                NewInvoiceView()
+            case .estimate:
+                NewEstimateView()
+            }
+        }
     }
-
+    
     private var headerSection: some View {
         HStack(alignment: .top) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Dashboard")
-                    .font(.system(size: 28, weight: .bold))
+                    .font(.system(size: 28, weight: .semibold))
                     .foregroundColor(.black)
+                    
                 
             }
             
             Spacer()
             
             Button {
-                // Add action
+                presentedSheet = .newInvoice
             } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 20, weight: .bold))
@@ -88,116 +110,25 @@ struct DashboardView: View {
         HStack(spacing: 12) {
             ActionCard(
                 icon: "doc.text.fill",
-                title: "New Invoice"
+                title: "New Invoice",
+                onTap: { presentedSheet = .newInvoice }
             )
             
             ActionCard(
                 icon: "doc.badge.plus.fill",
-                title: "New Estimate"
+                title: "New Estimate",
+                onTap: { presentedSheet = .estimate }
             )
         }
     }
-
+    
     private var recentDocumentsSection: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text("Recent Documents")
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(.black)
-            
-            // Empty State
-            VStack(spacing: 16) {
-                emptyStateIcon
-                
-                VStack(spacing: 8) {
-                    Text("No documents yet")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.black)
-                    
-                    Text("Create your first invoice to get started")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
-                }
-                
-                Button {
-                    // Create first invoice
-                } label: {
-                    Text("Create First Invoice")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 44)
-                        .background(Color.black)
-                        .cornerRadius(8)
-                }
-                .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 40)
         }
-    }
-
-    private var emptyStateIcon: some View {
-        ZStack {
-            Circle()
-                .fill(Color.gray.opacity(0.13))
-                .frame(width: 68, height: 68)
-            
-            Image(systemName: "doc.text")
-                .font(.system(size: 28, weight: .semibold))
-                .foregroundColor(Color.black.opacity(0.5))
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
-struct StatCard: View {
-    let icon: String
-    let iconColor: Color
-    let title: String
-    let value: String
-    
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 22))
-                .foregroundColor(iconColor)
-            
-            Text(title)
-                .font(.system(size: 12, weight: .regular))
-                .foregroundColor(.gray)
-            
-            Text(value)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(.black)
-        }
-        .frame(maxWidth: .infinity, minHeight: 95)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .stroke(Color(.systemGray5), lineWidth: 1)
-        )
-    }
-}
-
-struct ActionCard: View {
-    let icon: String
-    let title: String
-    
-    var body: some View {
-        VStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 28))
-                .foregroundColor(.black)
-            
-            Text(title)
-                .font(.system(size: 15, weight: .medium))
-                .foregroundColor(.black)
-        }
-        .frame(maxWidth: .infinity, minHeight: 88)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(.systemGray5), lineWidth: 1)
-        )
     }
 }
 

@@ -70,7 +70,6 @@ struct CustomTabBarView: View {
     }
 }
 
-// MARK: - Root View with Tab Navigation
 struct RootTabView: View {
     @State private var selectedTab: MainTab = .home
     
@@ -87,14 +86,13 @@ struct RootTabView: View {
         }
     }
     
-    // MARK: - Tab Content
     @ViewBuilder
     private var tabContent: some View {
         switch selectedTab {
         case .home:
             DashboardView()
         case .documents:
-            DocumentsView()
+            DocumentView()
         case .clients:
             ClientsView()
         case .settings:
@@ -103,18 +101,6 @@ struct RootTabView: View {
     }
 }
 
-// MARK: - Placeholder Views
-struct DocumentsView: View {
-    var body: some View {
-        VStack {
-            Text("Documents")
-                .font(.system(size: 28, weight: .bold))
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 16)
-    }
-}
 
 struct ClientsView: View {
     var body: some View {

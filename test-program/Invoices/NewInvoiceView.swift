@@ -1,26 +1,30 @@
 import SwiftUI
 
 struct NewInvoiceView: View {
+    @Environment(\.dismiss) private var dismiss
 
     @State private var invoiceNumber: String = "INV-1001"
     @State private var issueDate: String = ""
     @State private var dueDate: String = ""
     @State private var clientName: String = ""
-    
+
     @State private var itemName: String = ""
     @State private var qty: String = "1"
     @State private var rate: String = "0"
     @State private var unit: String = ""
     @State private var isTaxable: Bool = true
-    
+
     @State private var notes: String = ""
     @State private var paymentDetails: String = ""
+
+    @State private var isCatalogPresented: Bool = false
+    @State private var isTaxDiscountPresented: Bool = false
+    @State private var isAddItemPresented: Bool = false
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Invoice Number")
                             .font(.subheadline)
@@ -35,7 +39,7 @@ struct NewInvoiceView: View {
                             TextField("", text: $issueDate)
                                 .customFieldStyle()
                         }
-                        
+
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Due Date")
                                 .font(.subheadline)
@@ -60,7 +64,9 @@ struct NewInvoiceView: View {
                             Text("Items")
                                 .font(.headline)
                             Spacer()
-                            Button(action: {}) {
+                            Button {
+                                isCatalogPresented = true
+                            } label: {
                                 HStack(spacing: 4) {
                                     Image(systemName: "cube.box")
                                     Text("Catalog")
@@ -74,23 +80,23 @@ struct NewInvoiceView: View {
                             Text("Item 1")
                                 .font(.caption)
                                 .foregroundColor(.gray)
-                            
+
                             TextField("Item name", text: $itemName)
                                 .font(.body)
-                            
+
                             HStack(spacing: 16) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("Qty").font(.caption).foregroundColor(.gray)
                                     TextField("1", text: $qty)
                                         .keyboardType(.decimalPad)
                                 }
-                                
+
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("Rate").font(.caption).foregroundColor(.gray)
                                     TextField("0", text: $rate)
                                         .keyboardType(.decimalPad)
                                 }
-                                
+
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("Unit").font(.caption).foregroundColor(.gray)
                                     TextField("", text: $unit)
@@ -99,7 +105,7 @@ struct NewInvoiceView: View {
                                         .cornerRadius(6)
                                 }
                             }
-                            
+
                             HStack {
                                 Toggle(isOn: $isTaxable) {
                                     Text("Taxable")
@@ -107,8 +113,9 @@ struct NewInvoiceView: View {
                                         .foregroundColor(.gray)
                                 }
                                 .toggleStyle(SwitchToggleStyle(tint: .black))
-                                
+
                                 Spacer()
+
                                 Text("$0.00")
                                     .font(.subheadline)
                             }
@@ -116,9 +123,11 @@ struct NewInvoiceView: View {
                         .padding()
                         .background(Color(.systemGray6))
                         .cornerRadius(12)
-                        
-                        // Add Item Button
-                        Button(action: {}) {
+
+                        // Add Item Button (stub)
+                        Button {
+                            isAddItemPresented = true
+                        } label: {
                             HStack {
                                 Image(systemName: "plus")
                                 Text("Add Item")
@@ -133,7 +142,9 @@ struct NewInvoiceView: View {
                         .foregroundColor(.primary)
                     }
 
-                    Button(action: {}) {
+                    Button {
+                        isTaxDiscountPresented = true
+                    } label: {
                         HStack {
                             Image(systemName: "percent")
                             Text("Tax & Discount")
@@ -157,16 +168,6 @@ struct NewInvoiceView: View {
                             .customFieldStyle()
                     }
 
-                    HStack(spacing: 12) {
-                        ActionButton(icon: "doc", title: "Draft", isPrimary: false)
-                        ActionButton(icon: "eye", title: "Preview", isPrimary: false)
-                        ActionButton(icon: "paperplane", title: "Send", isPrimary: true)
-                    }
-
-                    TextField("Bank: ... / Zelle: ...", text: $paymentDetails, axis: .vertical)
-                        .lineLimit(2...4)
-                        .customFieldStyle()
-
                     VStack(spacing: 12) {
                         HStack {
                             Text("Subtotal")
@@ -182,7 +183,6 @@ struct NewInvoiceView: View {
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(12)
-                    
                 }
                 .padding()
             }
@@ -190,19 +190,28 @@ struct NewInvoiceView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        // Dismiss action
-                    }) {
+                    Button {
+                        dismiss()
+                    } label: {
                         Image(systemName: "arrow.left")
                             .foregroundColor(.primary)
                     }
                 }
             }
+            .sheet(isPresented: $isCatalogPresented) {
+                ComingSoonView(title: "Catalog", message: "Каталог товаров/услуг пока заглушка.")
+            }
+            .sheet(isPresented: $isTaxDiscountPresented) {
+                ComingSoonView(title: "Tax & Discount", message: "Настройка налогов/скидок пока заглушка.")
+            }
+            .sheet(isPresented: $isAddItemPresented) {
+                ComingSoonView(title: "Add Item", message: "Добавление позиции пока заглушка.")
+            }
         }
     }
 }
 
-struct CustomFieldStyleModifier: ViewModifier {
+private struct CustomFieldStyleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .padding()
@@ -211,34 +220,9 @@ struct CustomFieldStyleModifier: ViewModifier {
     }
 }
 
-extension View {
+private extension View {
     func customFieldStyle() -> some View {
-        self.modifier(CustomFieldStyleModifier())
-    }
-}
-
-struct ActionButton: View {
-    let icon: String
-    let title: String
-    let isPrimary: Bool
-    
-    var body: some View {
-        Button(action: {}) {
-            HStack(spacing: 6) {
-                Image(systemName: icon)
-                Text(title)
-            }
-            .font(.subheadline.weight(.medium))
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .background(isPrimary ? Color.black : Color.clear)
-            .foregroundColor(isPrimary ? .white : .primary)
-            .cornerRadius(10)
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(isPrimary ? Color.clear : Color(.systemGray4), lineWidth: 1)
-            )
-        }
+        modifier(CustomFieldStyleModifier())
     }
 }
 
@@ -246,3 +230,4 @@ struct ActionButton: View {
 #Preview {
     NewInvoiceView()
 }
+
