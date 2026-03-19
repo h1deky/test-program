@@ -99,29 +99,7 @@ struct RootTabView: View {
     }
 }
 
-struct ClientsView: View {
-    var body: some View {
-        VStack {
-            Text("Clients")
-                .font(.system(size: 28, weight: .bold))
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 16)
-    }
-}
 
-struct SettingsView: View {
-    var body: some View {
-        VStack {
-            Text("Settings")
-                .font(.system(size: 28, weight: .bold))
-            Spacer()
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 16)
-    }
-}
 
 #Preview {
     RootTabView()

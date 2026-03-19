@@ -90,7 +90,7 @@ struct DocumentView: View {
                 .foregroundColor(.gray)
                 .padding(.leading, 8)
 
-            TextField("Search", text: searchText)
+            TextField("Search documents...", text: searchText)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(.gray)
                 .padding(12)
