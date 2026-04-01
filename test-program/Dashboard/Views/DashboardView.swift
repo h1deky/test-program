@@ -103,6 +103,7 @@ struct DashboardView: View {
                 .environmentObject(clientsStore)
         case .estimate:
             NewEstimateView()
+                .environmentObject(clientsStore)
         }
     }
 }

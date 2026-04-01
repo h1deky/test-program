@@ -28,6 +28,7 @@ struct ClientsView: View {
         }
         .sheet(isPresented: $isPresentingNewClient) {
             NewClientView()
+                .environmentObject(clientsStore)
         }
     }
 

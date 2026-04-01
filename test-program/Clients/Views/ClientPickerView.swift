@@ -29,6 +29,7 @@ struct ClientPickerView: View {
                     onSelect(client)
                     dismiss()
                 }
+                .environmentObject(clientsStore)
             }
         }
     }

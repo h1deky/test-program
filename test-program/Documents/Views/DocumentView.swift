@@ -83,6 +83,7 @@ struct DocumentView: View {
                 .environmentObject(clientsStore)
         case .newEstimate:
             NewEstimateView()
+                .environmentObject(clientsStore)
         }
     }
 
