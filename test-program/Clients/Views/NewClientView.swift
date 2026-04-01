@@ -2,7 +2,15 @@ import SwiftUI
 
 struct NewClientView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var clientsStore: ClientsStore
+
+    let onCreate: ((Client) -> Void)?
+
     @StateObject private var viewModel = NewClientViewModel()
+
+    init(onCreate: ((Client) -> Void)? = nil) {
+        self.onCreate = onCreate
+    }
 
     var body: some View {
         NavigationStack {
@@ -82,6 +90,12 @@ struct NewClientView: View {
 
     private var createButton: some View {
         Button {
+            guard let client = viewModel.buildClient() else {
+                return
+            }
+
+            clientsStore.addClient(client)
+            onCreate?(client)
             dismiss()
         } label: {
             Text("Create Client")
@@ -100,4 +114,5 @@ struct NewClientView: View {
 
 #Preview {
     NewClientView()
+        .environmentObject(ClientsStore())
 }

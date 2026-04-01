@@ -74,6 +74,7 @@ struct CustomTabBarView: View {
 }
 
 struct RootTabView: View {
+    @EnvironmentObject private var clientsStore: ClientsStore
     @StateObject private var viewModel = RootTabViewModel()
 
     var body: some View {
@@ -89,10 +90,13 @@ struct RootTabView: View {
         switch viewModel.selectedTab {
         case .home:
             DashboardView()
+                .environmentObject(clientsStore)
         case .documents:
             DocumentView()
+                .environmentObject(clientsStore)
         case .clients:
             ClientsView()
+                .environmentObject(clientsStore)
         case .settings:
             SettingsView()
         }
@@ -103,4 +107,5 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView()
+        .environmentObject(ClientsStore())
 }

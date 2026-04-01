@@ -2,7 +2,9 @@ import SwiftUI
 
 struct NewInvoiceView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var clientsStore: ClientsStore
     @StateObject private var viewModel = NewInvoiceViewModel()
+    @State private var isPresentingClientPicker = false
 
     var body: some View {
         NavigationStack {
@@ -11,6 +13,9 @@ struct NewInvoiceView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: toolbarContent)
             .sheet(item: $viewModel.presentedSheet, content: sheetView)
+            .sheet(isPresented: $isPresentingClientPicker) {
+                ClientPickerView(onSelect: handleClientSelection)
+            }
         }
     }
 
@@ -85,11 +90,24 @@ struct NewInvoiceView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Client")
                 .font(.subheadline)
-            HStack {
-                Image(systemName: "person.2")
-                    .foregroundColor(.gray)
-                TextField("Select client", text: $viewModel.clientName)
+            Button {
+                isPresentingClientPicker = true
+            } label: {
+                HStack {
+                    Image(systemName: "person.2")
+                        .foregroundColor(.gray)
+
+                    Text(viewModel.clientName.isEmpty ? "Select client" : viewModel.clientName)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundColor(viewModel.clientName.isEmpty ? .gray : .black)
+
+                    Spacer()
+
+                    Image(systemName: clientsStore.clients.isEmpty ? "plus.circle" : "chevron.right")
+                        .foregroundColor(.gray)
+                }
             }
+            .buttonStyle(.plain)
             .formFieldStyle()
         }
     }
@@ -265,7 +283,7 @@ struct NewInvoiceView: View {
                 .font(.system(size: 15, weight: .regular))
                 .foregroundColor(.gray)
 
-            actionTile(title: "Send by Email", subtitle: "Prepare invoice for email delivery")
+            actionTile(title: "Send Invoice", subtitle: "Prepare invoice")
             actionTile(title: "Export PDF", subtitle: "Generate a PDF version for sharing")
         }
     }
@@ -324,6 +342,10 @@ struct NewInvoiceView: View {
         }
     }
 
+    private func handleClientSelection(_ client: Client) {
+        viewModel.clientName = client.name
+    }
+
     @ToolbarContentBuilder
     private func toolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .navigationBarLeading) {
@@ -343,4 +365,5 @@ struct NewInvoiceView: View {
 
 #Preview {
     NewInvoiceView()
+        .environmentObject(ClientsStore())
 }

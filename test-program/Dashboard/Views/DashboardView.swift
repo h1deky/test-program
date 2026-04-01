@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DashboardView: View {
+    @EnvironmentObject private var clientsStore: ClientsStore
     @StateObject private var viewModel = DashboardViewModel()
 
     var body: some View {
@@ -99,6 +100,7 @@ struct DashboardView: View {
         switch sheet {
         case .newInvoice:
             NewInvoiceView()
+                .environmentObject(clientsStore)
         case .estimate:
             NewEstimateView()
         }
@@ -107,4 +109,5 @@ struct DashboardView: View {
 
 #Preview {
     DashboardView()
+        .environmentObject(ClientsStore())
 }

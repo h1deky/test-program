@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DocumentView: View {
+    @EnvironmentObject private var clientsStore: ClientsStore
     @StateObject private var viewModel = DocumentViewModel()
 
     var body: some View {
@@ -79,6 +80,7 @@ struct DocumentView: View {
         switch route {
         case .newInvoice:
             NewInvoiceView()
+                .environmentObject(clientsStore)
         case .newEstimate:
             NewEstimateView()
         }
@@ -102,4 +104,5 @@ struct DocumentView: View {
 
 #Preview {
     DocumentView()
+        .environmentObject(ClientsStore())
 }
